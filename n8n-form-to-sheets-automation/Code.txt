@@ -1,0 +1,156 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1m6FjZ1xohPi1f3BMViKKT-v7dWdU4qXyCpFffTlDRG4",
+          "mode": "list",
+          "cachedResultName": " form (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1m6FjZ1xohPi1f3BMViKKT-v7dWdU4qXyCpFffTlDRG4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2106168174,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1m6FjZ1xohPi1f3BMViKKT-v7dWdU4qXyCpFffTlDRG4/edit#gid=2106168174"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "170571dd-a431-4d85-a6bf-cc5e561bed66",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "Jj09N1omViLsbzzL",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "062f02a5-aded-4ac1-9f6d-d37997b4d797",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "302d419a-94ed-4555-b3eb-fdaf2a6bb74c",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "=Hello {{ $json.Name }}",
+        "message": "=<!DOCTYPE html> <html> <head>     <style>         .container { font-family: Tahoma, sans-serif; direction: rtl; border: 1px solid #ddd; padding: 20px; border-radius: 10px; max-width: 500px; margin: auto; }         .header { background-color: #4CAF50; color: white; padding: 10px; text-align: center; border-radius: 8px 8px 0 0; }         .content { padding: 20px; line-height: 1.6; color: #333; }         .footer { font-size: 12px; text-align: center; color: #777; margin-top: 20px; }         .button { display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px; }     </style> </head> <body>     <div class=\"container\">         <div class=\"header\">             <h2>تأیید دریافت اطلاعات</h2>         </div>         <div class=\"content\">             <p>سلام <strong>{{ $json.Name }}</strong> عزیز،</p>             <p>امیدواریم حالتون خوب باشه. اطلاعات شما با موفقیت در سیستم ما ثبت شد.</p>             <p>ما به زودی درخواست شما را بررسی خواهیم کرد.</p>             <center><a href=\"#\" class=\"button\">مشاهده سایت ما</a></center>         </div>         <div class=\"footer\">             این یک ایمیل خودکار است، لطفاً به آن پاسخ ندهید.         </div>     </div> </body> </html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "4df8af75-71ac-47ee-a5e6-59a1e8f6c27d",
+      "name": "Send a message",
+      "webhookId": "00774a33-13da-47ef-880a-e63ce644b1b0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "06p90Ri6op35h1mM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.stopAndError",
+      "typeVersion": 1,
+      "position": [
+        480,
+        80
+      ],
+      "id": "7e04b47e-e6e0-42a6-bb21-1e7b277c6a48",
+      "name": "Stop and Error"
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop and Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Google Sheets Trigger": [
+      {
+        "Timestamp": "07:20:00",
+        "Name": "Erfan",
+        "Email": "erfangol909@gmail.com"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4f05f8eabcba2be2a882b43e822a7be79ea68df3dd036dabe4676ef64935bacf"
+  }
+}
